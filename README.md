@@ -1,6 +1,6 @@
 # A simple roblox-ts framework
 
-Note: This requires https://www.npmjs.com/package/femuwu-transformer to work properly
+Note: This requires https://github.com/AF1nd/Neuwork-Transformer to work properly
 
 ## Features:
 
@@ -8,8 +8,8 @@ Note: This requires https://www.npmjs.com/package/femuwu-transformer to work pro
     Providers are server-side singletons responsible for any important game system. Example:
   
 ```ts
-import { Provider } from "@rbxts/femuwu";
-import { DataStoreService } from "@rbxts/services";
+import { Provider } from "@rbxts/neuwork";
+import { DataStoreService } from "@rbxts/services"
 
 @Provider
 export class DataProvider {
@@ -30,7 +30,7 @@ export class DataProvider {
     Services are client-side singletons responsible for any client system. Example:
 
 ```ts
-import { Service } from "@rbxts/femuwu";
+import { Service } from "@rbxts/";
 
 @Service
 export class TestService {
@@ -41,12 +41,12 @@ export class TestService {
 ```
 
 - Dependency Injection:
-    The femuwu provides the ability to inject dependencies with @Inject decorator. Example:
+    The neuwork provides the ability to inject dependencies with @Inject decorator. Example:
 
 ```ts
 // TestService2
 
-import { Service } from "@rbxts/femuwu";
+import { Service } from "@rbxts/neuwork";
 
 @Service
 export class TestService2 {
@@ -55,7 +55,7 @@ export class TestService2 {
 
 // TestService1
 
-import { Service, Inject } from "@rbxts/femuwu";
+import { Service, Inject } from "@rbxts/neuwork";
 import { TestService2 } from "./TestService2";
 
 @Service
@@ -70,12 +70,12 @@ export class TestService {
 
 start() is the method that is called when the singleton starts (logically lol)
 
-# Start femuwu:
+# Start neuwork:
 
 ```ts
 // Server:
 
-import { coreStart } from "@rbxts/femuwu";
+import { coreStart } from "@rbxts/neuwork";
 
 const modules = script.Parent!.WaitForChild("providers"); // or name of your folder that contains providers
 
@@ -95,7 +95,7 @@ Promise.all(promises).then(() => coreStart());
 
 // Client:
 
-import { coreStart } from "@rbxts/femuwu";
+import { coreStart } from "@rbxts/neuwork";
 
 const modules = script.Parent!.WaitForChild("services"); // or name of your folder that contains services
 
