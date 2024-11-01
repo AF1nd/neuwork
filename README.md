@@ -50,7 +50,7 @@ import { Service } from "@rbxts/neuwork";
 
 @Service
 export class TestService2 {
-    print(text: string) { print(text) }
+    print(text: string) { print(text); }
 }
 
 // TestService1
@@ -62,8 +62,8 @@ import { TestService2 } from "./TestService2";
 export class TestService {
     @Inject testService2!: TestService2;
     start() {
-        print("TestService started!")
-        this.testService2.print("Hello") // prints Hello
+        print("TestService started!");
+        this.testService2.print("Hello"); // prints Hello
     }
 }
 ```
