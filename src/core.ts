@@ -10,12 +10,20 @@ const INSTANCES = new Map<string, object & { start?(): void }>();
 
 /** @server */
 
+let bootloader: Ctor;
+
 export const Provider = (ctor: Ctor) => {
 	const name = tostring(ctor);
 	if (CONSTRUCTORS.has(name)) error(`Provider ${name} already registered`);
 
 	CONSTRUCTORS.set(name, ctor);
 };
+
+export const Bootloader = (ctor: Ctor) => {
+	const name = tostring(ctor);
+	if (!bootloader) bootloader = ctor
+	else error("Bootloader already exist")
+}
 
 /** @client */
 
@@ -62,6 +70,17 @@ export function coreStart() {
 			}
 		});
 
-		INSTANCES.forEach(async (instance) => (instance.start !== undefined ? instance.start() : undefined));
+		let bootloaderInstance: (object & { start?(): void; }) | undefined
+
+		if (bootloader) {
+			const name = tostring(bootloader);
+			bootloaderInstance = INSTANCES.get(name);
+
+			if (bootloaderInstance) {
+				if (bootloaderInstance.start !== undefined) task.spawn(() => bootloaderInstance!.start!())
+			} else error("Cannot find bootloader instance")
+		}
+
+		INSTANCES.forEach(async (instance) => (instance.start !== undefined && instance !== bootloaderInstance ? instance.start() : undefined));
 	});
 }
