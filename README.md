@@ -39,6 +39,37 @@ export class TestService {
     }
 }
 ```
+- "Bootloader":
+  This is the provider or service that starts first (can be used, for example, for a loading screen)
+
+```ts
+import { Service, Bootloader } from "@rbxts/neuwork";
+
+@Service
+@Bootloader
+export class TestBootloader {
+    onBootloaderStarted = new Signal() // For example
+
+    start() {
+	print("UwU^^")
+	this.onBootloaderStarted.Fire()
+    }
+}
+
+// TestService waits for bootloader has started and fired signal
+
+import { Service, Inject } from "@rbxts/neuwork";
+import { TestBootloader } from "./TestBootloader";
+
+@Service
+export class TestService {
+    @Inject testBootloader!: TestBootloader;
+    start() {
+	this.testBootloader.onBootloaderStarted.Wait()
+        print("TestService started!");
+    }
+}
+```
 
 - Dependency Injection:
     The neuwork provides the ability to inject dependencies with @Inject decorator. Example:
