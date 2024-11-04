@@ -1,18 +1,19 @@
-// AUTHOR: AF1nd
-// It's don't work without transformer
+// It's don't work properly without transformer!!!
 
 type Ctor = new (...args: never[]) => object & { start?(): void };
 
 const CONSTRUCTORS = new Map<string, Ctor>();
 const INSTANCES = new Map<string, object & { start?(): void }>();
 
-// Decorators
+const RUN_SERVICE = game.GetService("RunService");
 
-/** @server */
+// Decorators
 
 let bootloader: Ctor;
 
 export const Provider = (ctor: Ctor) => {
+	if (!RUN_SERVICE.IsServer()) error("Provider can be created only from server")
+
 	const name = tostring(ctor);
 	if (CONSTRUCTORS.has(name)) error(`Provider ${name} already registered`);
 
@@ -25,9 +26,9 @@ export const Bootloader = (ctor: Ctor) => {
 	else error("Bootloader already exist")
 }
 
-/** @client */
-
 export const Service = (ctor: Ctor) => {
+	if (!RUN_SERVICE.IsClient()) error("Service can be created only from client")
+	
 	const name = tostring(ctor);
 	if (CONSTRUCTORS.has(name)) error(`Service ${name} already registered`);
 
