@@ -30,7 +30,7 @@ export class DataProvider {
     Services are client-side singletons responsible for any client system. Example:
 
 ```ts
-import { Service } from "@rbxts/";
+import { Service } from "@rbxts/neuwork";
 
 @Service
 export class TestService {
