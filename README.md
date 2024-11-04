@@ -30,12 +30,43 @@ export class DataProvider {
     Services are client-side singletons responsible for any client system. Example:
 
 ```ts
-import { Service } from "@rbxts/";
+import { Service } from "@rbxts/neuwork";
 
 @Service
 export class TestService {
     start() {
         print("TestService started!")
+    }
+}
+```
+- "Bootloader":
+  This is the provider or service that starts first (can be used, for example, for a loading screen)
+
+```ts
+import { Service, Bootloader } from "@rbxts/neuwork";
+
+@Service
+@Bootloader
+export class TestBootloader {
+    onBootloaderStarted = new Signal() // For example
+
+    start() {
+	print("UwU^^")
+	this.onBootloaderStarted.Fire()
+    }
+}
+
+// TestService waits for bootloader has started and fired signal
+
+import { Service, Inject } from "@rbxts/neuwork";
+import { TestBootloader } from "./TestBootloader";
+
+@Service
+export class TestService {
+    @Inject testBootloader!: TestBootloader;
+    start() {
+	this.testBootloader.onBootloaderStarted.Wait()
+        print("TestService started!");
     }
 }
 ```
