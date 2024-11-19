@@ -7,10 +7,6 @@ const INSTANCES = new Map<string, object & { start?(): void }>();
 
 const RUN_SERVICE = game.GetService("RunService");
 
-// Decorators
-
-let bootloader: Ctor;
-
 export const Provider = (ctor: Ctor) => {
 	if (!RUN_SERVICE.IsServer()) error("Provider can be created only from server")
 
@@ -19,12 +15,6 @@ export const Provider = (ctor: Ctor) => {
 
 	CONSTRUCTORS.set(name, ctor);
 };
-
-export const Bootloader = (ctor: Ctor) => {
-	const name = tostring(ctor);
-	if (!bootloader) bootloader = ctor
-	else error("Bootloader already exist")
-}
 
 export const Service = (ctor: Ctor) => {
 	if (!RUN_SERVICE.IsClient()) error("Service can be created only from client")
@@ -71,17 +61,6 @@ export function coreStart() {
 			}
 		});
 
-		let bootloaderInstance: (object & { start?(): void; }) | undefined
-
-		if (bootloader) {
-			const name = tostring(bootloader);
-			bootloaderInstance = INSTANCES.get(name);
-
-			if (bootloaderInstance) {
-				if (bootloaderInstance.start !== undefined) task.spawn(() => bootloaderInstance!.start!())
-			} else error("Cannot find bootloader instance")
-		}
-
-		INSTANCES.forEach(async (instance) => (instance.start !== undefined && instance !== bootloaderInstance ? instance.start() : undefined));
+		INSTANCES.forEach(async (instance) => (instance.start !== undefined ? instance.start() : undefined));
 	});
 }
